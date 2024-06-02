@@ -1,13 +1,12 @@
 import { StatusBar } from "expo-status-bar";
-import { NavigationContainer } from "@react-navigation/native";
 import { StyleSheet, Text, View } from "react-native";
-import MainNavigator from "./components/MainNavigator";
 
-export default function App() {
+export default function ImageScreen() {
   return (
-    <NavigationContainer>
-      <MainNavigator />
-    </NavigationContainer>
+    <View style={styles.container}>
+      <Text>Image screen</Text>
+      <StatusBar style="auto" />
+    </View>
   );
 }
 
