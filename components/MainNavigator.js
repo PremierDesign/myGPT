@@ -4,20 +4,18 @@ import ImageScreen from "../screens/ImageScreen";
 import SettingScreen from "../screens/SettingScreen";
 import { Entypo, Ionicons } from "@expo/vector-icons";
 import { Settings } from "react-native";
-// import Constants from "expo-constants";
 import { OPENAI_API } from "@env";
 
 const Tab = createBottomTabNavigator();
-// const apiKey = Constants.extra.OPENAI_API;
-// const apiKey = process.env.OPENAI_API;
 const apiKey = OPENAI_API;
 
 export default function MainNavigator() {
   return (
     <Tab.Navigator>
       <Tab.Screen
-        name={apiKey}
+        name="Chat"
         component={ChatScreen}
+        r
         options={{
           tabBarIcon: ({ color, size }) => (
             <Entypo name="chat" size={size} color={color} />

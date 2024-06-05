@@ -8,14 +8,35 @@ import {
 } from "react-native";
 import colors from "../constants/colors";
 import { Feather } from "@expo/vector-icons";
-import KeyboardAvoidaingViewContainter from "../components/KeyboardAvoidaingViewContainter";
-import { useCallback, useState } from "react";
+import KeyboardAvoidaingViewContainter from "../components/KeyboardAvoidingViewContainter";
+import { useCallback, useEffect, useState } from "react";
+import { makeChatRequest } from "../utils/gtpUtils";
+import {
+  addUserMessage,
+  getConversation,
+  initConversation,
+} from "../utils/conversationHistoryUtil";
 
 export default function ChatScreen() {
   const [messageText, setMessageText] = useState("");
+  const [conversation, setConversation] = useState([]);
 
-  const sendMessage = useCallback(() => {
-    setMessageText("");
+  useEffect(() => {
+    initConversation();
+    setConversation([]);
+  }, []);
+
+  const sendMessage = useCallback(async () => {
+    try {
+      addUserMessage(messageText);
+      setMessageText("");
+      setConversation([...getConversation()]);
+      await makeChatRequest();
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setConversation([...getConversation()]);
+    }
   }, [messageText]);
 
   return (
