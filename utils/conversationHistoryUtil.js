@@ -5,7 +5,7 @@ export const getConversation = () => {
 };
 
 export const initConversation = () => {
-  addSystemMessage("Your name is Jeff");
+  addSystemMessage("The assistants name is Jeff");
 };
 
 export const addUserMessage = (messageText) => {
