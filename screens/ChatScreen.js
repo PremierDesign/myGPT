@@ -5,6 +5,7 @@ import {
   TextInput,
   TouchableOpacity,
   View,
+  FlatList,
 } from "react-native";
 import colors from "../constants/colors";
 import { Feather } from "@expo/vector-icons";
@@ -16,6 +17,8 @@ import {
   getConversation,
   initConversation,
 } from "../utils/conversationHistoryUtil";
+import Bubble from "../components/Bubble";
+// import { FlatList } from "react-native-web";
 
 export default function ChatScreen() {
   const [messageText, setMessageText] = useState("");
@@ -27,6 +30,8 @@ export default function ChatScreen() {
   }, []);
 
   const sendMessage = useCallback(async () => {
+    if (messageText === "") return;
+
     try {
       addUserMessage(messageText);
       setMessageText("");
@@ -42,8 +47,19 @@ export default function ChatScreen() {
   return (
     <KeyboardAvoidaingViewContainter>
       <View style={styles.container}>
-        <View style={styles.messageContainer}></View>
+        <View style={styles.messageContainer}>
+          <FlatList
+            style={styles.flatList}
+            data={conversation}
+            renderItem={(itemData) => {
+              const convoItem = itemData.item;
+              const { role, content } = convoItem;
+              if (role === "system") return null;
 
+              return <Bubble text={convoItem.content} type={convoItem.role} />;
+            }}
+          />
+        </View>
         <View style={styles.inputContainer}>
           <TextInput
             styles={styles.textbox}
@@ -74,7 +90,7 @@ const styles = StyleSheet.create({
   sendButton: {
     backgroundColor: colors.primary,
     width: 35,
-    hieght: 35,
+    height: 35,
     alignItems: "center",
     justifyContent: "center",
     borderRadius: 50,
@@ -82,7 +98,10 @@ const styles = StyleSheet.create({
   textbox: {
     flex: 1,
   },
-  messageContainer: {
+  messagesContainer: {
     flex: 1,
+  },
+  flatList: {
+    marginHorizontal: 15,
   },
 });
