@@ -1,24 +1,23 @@
 import {
+  FlatList,
   KeyboardAvoidingView,
   StyleSheet,
   Text,
   TextInput,
   TouchableOpacity,
   View,
-  FlatList,
 } from "react-native";
 import colors from "../constants/colors";
 import { Feather } from "@expo/vector-icons";
-import KeyboardAvoidaingViewContainter from "../components/KeyboardAvoidingViewContainter";
+import KeyboardAvoidingViewContainer from "../components/KeyboardAvoidingViewContainer";
 import { useCallback, useEffect, useState } from "react";
-import { makeChatRequest } from "../utils/gtpUtils";
+import { makeChatRequest } from "../utils/gptUtils";
 import {
   addUserMessage,
   getConversation,
   initConversation,
 } from "../utils/conversationHistoryUtil";
 import Bubble from "../components/Bubble";
-// import { FlatList } from "react-native-web";
 
 export default function ChatScreen() {
   const [messageText, setMessageText] = useState("");
@@ -35,45 +34,49 @@ export default function ChatScreen() {
     try {
       addUserMessage(messageText);
       setMessageText("");
-      setConversation([...getConversation()]);
+      setConversation(getConversation());
+
       await makeChatRequest();
     } catch (error) {
       console.log(error);
     } finally {
-      setConversation([...getConversation()]);
+      setConversation(getConversation());
     }
   }, [messageText]);
 
   return (
-    <KeyboardAvoidaingViewContainter>
+    <KeyboardAvoidingViewContainer>
       <View style={styles.container}>
-        <View style={styles.messageContainer}>
+        <View style={styles.messagesContainer}>
           <FlatList
             style={styles.flatList}
             data={conversation}
             renderItem={(itemData) => {
               const convoItem = itemData.item;
+
               const { role, content } = convoItem;
+
               if (role === "system") return null;
 
-              return <Bubble text={convoItem.content} type={convoItem.role} />;
+              return <Bubble text={content} type={role} />;
             }}
           />
         </View>
+
         <View style={styles.inputContainer}>
           <TextInput
-            styles={styles.textbox}
+            style={styles.textbox}
             placeholder="Type a message..."
             onChangeText={(text) => setMessageText(text)}
             value={messageText}
           />
 
           <TouchableOpacity style={styles.sendButton} onPress={sendMessage}>
-            <Feather name="send" size={18} color={"black"} />
+            <Feather name="send" size={18} color="white" />
           </TouchableOpacity>
         </View>
       </View>
-    </KeyboardAvoidaingViewContainter>
+    </KeyboardAvoidingViewContainer>
   );
 }
 
